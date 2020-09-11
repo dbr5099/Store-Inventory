@@ -143,21 +143,13 @@ def view_product():
 
 def backup_product():
     """Make backup of the contents"""
-    with open('backup.csv', 'a') as csvfile:
-        fieldnames = ['product_id', 'product_name', 'product_price', 'product_quantity', 'date_updated']
-        productwriter = csv.DictWriter(csvfile, fieldnames=fieldnames)
-
-        productwriter.writeheader()
-        food_list = Product.select().order_by(Product.product_id.asc())
-        for food in food_list:
-            productwriter.writerow({
-                'product_id': food.product_id,
-                'product_name': food.product_name,
-                'product_price': food.product_price,
-                'product_quantity': food.product_quantity,
-                'date_updated': food.date_updated,
-            })
-        print("Success! backup.csv was created.")
+    with open('backup.csv', 'w', newline='\n') as backup:
+        wr = csv.writer(backup)
+        wr.writerow(['product_name','product_price', 'product_quantity', 'date_updated'])
+        for row in Product.select():
+            data = [row.product_name, row.product_price, row. product_quantity, row.date_updated]
+            wr.writerow(data)
+        print("\nSuccess! backup.csv was created.\n")
 
 menu = OrderedDict([
     ('a', add_product),
